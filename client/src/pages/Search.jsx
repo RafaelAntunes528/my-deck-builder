@@ -153,7 +153,7 @@ function SearchResult() {
       </div>
 
       <footer className="mt-6 text-gray-500 text-sm text-center">
-        © {new Date().getFullYear()} Magic Deck Builder created by Group 5 - Bytes4Future
+        © {new Date().getFullYear()} My Deck Builder. All rights reserved.
       </footer>
     </>
   );

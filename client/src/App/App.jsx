@@ -21,7 +21,7 @@ function App() {
   
     <Router>
       <div
-        className="relative w-full h-screen bg-cover bg-center"
+        className="relative w-full min-h-screen bg-transparent bg-cover bg-center"
       >
         {/* Fagulhas entre o fundo e o conteúdo */}
         <MagicFireBackground />

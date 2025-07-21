@@ -4,6 +4,7 @@ import NavBarHome from "../components/NavBarHome";
 import { FaChevronLeft, FaChevronRight, FaBookOpen } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
+import url from 'url';
 
 function Tutorials() {
     const [activeIndex, setActiveIndex] = useState(0); // Começa no primeiro tópico
@@ -70,9 +71,8 @@ function Tutorials() {
     return (
         <>
         <header><NavBarHome/></header>
-        <div className="p-8 text-center mt-12 min-h-screen text-white flex flex-col items-center justify-center max-w-2xl mx-auto">
-            <h1 className="font-bold text-3xl mb-6 bg-gradient-to-r from-red-500 via-yellow-400 to-orange-500 bg-clip-text text-transparent drop-shadow">Tutorials</h1>
-            <p className="text-gray-300 mb-4">Learn how to play the game</p>
+        <div id="tutorials-root" className="p-8 text-center mt-12 min-h-screen text-white flex flex-col items-center justify-center max-w-2xl mx-auto">
+            <p className="text-gray-300 mb-4 text-3xl font-bold">Learn how to play the game</p>
 
             <div className="w-full bg-gradient-to-br from-gray-950/60 to-red-950/60 text-white p-6 mt-5 border-[10px] border-black rounded-2xl shadow-2xl">
                 <div className="grid grid-cols-1 gap-4">
@@ -156,7 +156,7 @@ function Tutorials() {
         </div>
 
         <footer className="mt-4 text-gray-500 text-sm text-center">
-        © {new Date().getFullYear()} Magic Deck Builder created by Group 5 - Bytes4Future
+        © {new Date().getFullYear()} My Deck Builder. All rights reserved.
       </footer>
       </>
     )

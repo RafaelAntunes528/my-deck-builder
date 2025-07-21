@@ -17,7 +17,7 @@ function SignUpPage() {
 
       </div>
       <footer className=" text-gray-500 text-sm text-center pb-6">
-        © {new Date().getFullYear()} Magic Deck Builder created by Group 5 - Bytes4Future
+        © {new Date().getFullYear()} My Deck Builder. All rights reserved.
       </footer>
     </>
   );

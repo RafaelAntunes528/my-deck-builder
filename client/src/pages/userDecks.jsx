@@ -50,7 +50,7 @@ function UserDecks() {
             </div>
 
             <footer className="mt-16 text-gray-500 text-sm text-center">
-                © {new Date().getFullYear()} Magic Deck Builder created by Group 5 - Bytes4Future
+                © {new Date().getFullYear()} My Deck Builder. All rights reserved.
             </footer>
         </>
     );

@@ -1,5 +1,5 @@
 import React from "react";
-import mtgLogo from "../images/mtg_logo_monocolor.svg"
+import mtgLogo from "../../public/images/mtg_logo_monocolor.svg"
 export default function LogoWithGlow() {
   return (
     <div className="relative inline-block p-4 w-fit">
@@ -17,7 +17,7 @@ export default function LogoWithGlow() {
       </svg>
 
       {/* SVG com glow aplicado */}
-      <img src={mtgLogo} className="glow-stroke w-56 sm:w-64 md:w-72 overflow-visible" ></img>
+      <img src={mtgLogo} className="img-glow w-56 sm:w-64 md:w-72 overflow-visible" ></img>
       {/* <LogoSVG className="glow-stroke w-56 sm:w-64 md:w-72 overflow-visible" /> */}
     </div>
   );

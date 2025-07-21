@@ -38,8 +38,16 @@ export default function LifeCounter() {
 
   // Atualiza número de jogadores e reseta cores/vidas
   const handleNumPlayers = (n) => {
+    // Gera um array de índices de cor aleatórios, sem repetir se possível
+    let colorIndices = Array.from({ length: PLAYER_COLORS.length }, (_, i) => i);
+    // Embaralha o array
+    for (let i = colorIndices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [colorIndices[i], colorIndices[j]] = [colorIndices[j], colorIndices[i]];
+    }
+    // Seleciona as cores para o número de jogadores
     setNumPlayers(n);
-    setPlayerColors(Array(n).fill(0));
+    setPlayerColors(colorIndices.slice(0, n));
     setLifes(Array(n).fill(20));
     setStep(1);
   };
@@ -82,57 +90,76 @@ export default function LifeCounter() {
             <FaBars className="text-3xl text-white" />
           </button>
           {menuOpen && (
-            <div className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 bg-black/95 border-2 border-grey-700 rounded-2xl shadow-2xl p-12 flex flex-col items-center gap-6 animate-fade-in min-w-[280px]">
+            <div className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 bg-white/60 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl p-12 flex flex-col items-center gap-6 animate-fade-in min-w-[280px]">
               {/* Botão de fechar (X) no canto superior direito */}
               <button
                 onClick={() => setMenuOpen(false)}
                 aria-label="Close menu"
                 className="absolute right-1 top-1 w-10 h-10 flex items-center justify-center rounded-full bg-gray-500 text-2xl text-white hover:text-red-500 focus:outline-none z-10"
+                style={{ border: 'none' }}
               >
                 ×
               </button>
-              <button
+              <HoverButton
                 onClick={() => {
                   handleReset();
                   setMenuOpen(false);
                 }}
-                className="w-full bg-gray-800 hover:bg-gray-700 text-white font-semibold px-4 py-2 rounded-lg border border-gray-600 text-base mb-2"
+                defaultColor="#2d2d2d"
+                hoverColor="#1a1a1a"
+                textColor="#fff"
+                hoverTextColor="#fff"
+                borderColor="#4b5563"
+                hoverScale={1.08}
+                style={{ marginBottom: '0.5rem' }}
               >
                 Reset
-              </button>
-              <button
+              </HoverButton>
+              <HoverButton
                 onClick={() => {
                   setStep(0);
                   setMenuOpen(false);
                 }}
-                className="w-full bg-red-700 hover:bg-red-900 text-white font-semibold px-4 py-2 rounded-lg border border-red-900 text-base"
+                defaultColor="#b91c1c"
+                hoverColor="#7f1d1d"
+                textColor="#fff"
+                hoverTextColor="#fff"
+                borderColor="#7f1d1d"
+                hoverScale={1.08}
+                style={{ marginBottom: '0.5rem' }}
               >
                 Back
-              </button>
-              <button
+              </HoverButton>
+              <HoverButton
                 onClick={() => {
                   navigate("/");
                   setMenuOpen(false);
                 }}
-                className="w-full bg-white hover:bg-red-600 hover:text-white text-black font-semibold px-4 py-2 rounded-lg text-base mb-2"
+                defaultColor="#fff"
+                hoverColor="#000"
+                textColor="#000"
+                hoverTextColor="#fff"
+                borderColor="#e5e7eb"
+                hoverScale={1.12}
+                style={{ marginBottom: '0.5rem' }}
               >
                 Main Page
-              </button>
+              </HoverButton>
             </div>
           )}
         </>
       )}
       {step === 0 && (
-        <div className="flex flex-col items-center gap-8 mt-8">
-          <h2 className="text-xl font-semibold mb-2">
+        <div className="flex flex-col items-center gap-8 justify-center min-h-screen">
+          <h2 className="text-xl font-semibold mb-2 text-white drop-shadow-lg">
             Choose number of players
           </h2>
-          <div className="flex gap-6">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full max-w-xs sm:max-w-none justify-center">
             {[2, 3, 4, 5].map((n) => (
               <button
                 key={n}
                 onClick={() => handleNumPlayers(n)}
-                className="bg-red-700 hover:bg-red-900 text-white font-bold px-8 py-4 rounded-xl text-2xl shadow-lg border-2 border-red-900 transition-all duration-200"
+                className="bg-white/20 backdrop-blur-md rounded-xl border border-white/30 text-white font-bold px-8 py-4 text-2xl shadow-2xl transition-all duration-200 w-full sm:w-auto hover:scale-105 hover:bg-white/30"
               >
                 {n} Players
               </button>
@@ -582,4 +609,41 @@ function getTailwindColor(idx) {
     "#a9a9a9", // black gray
   ];
   return colors[idx % colors.length];
+}
+
+// Componente de botão com hover customizado
+function HoverButton({ onClick, defaultColor, hoverColor, textColor, hoverTextColor, borderColor, style, hoverScale, children }) {
+  const [bg, setBg] = useState(defaultColor);
+  const [color, setColor] = useState(textColor);
+  const [scale, setScale] = useState(1);
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => {
+        setBg(hoverColor);
+        if (hoverTextColor) setColor(hoverTextColor);
+        if (hoverScale) setScale(hoverScale);
+      }}
+      onMouseLeave={() => {
+        setBg(defaultColor);
+        setColor(textColor);
+        setScale(1);
+      }}
+      style={{
+        width: '100%',
+        background: bg,
+        color: color,
+        fontWeight: '600',
+        padding: '0.5rem 1rem',
+        borderRadius: '0.5rem',
+        border: `1px solid ${borderColor}`,
+        fontSize: '1rem',
+        transition: 'background 0.2s, color 0.2s, transform 0.2s',
+        transform: `scale(${scale})`,
+        ...style
+      }}
+    >
+      {children}
+    </button>
+  );
 }

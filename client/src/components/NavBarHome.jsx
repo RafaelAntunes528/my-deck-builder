@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import mtg_logo_monocolor from "../images/mtg_logo_monocolor.svg";
+import mtg_logo_monocolor from "../../public/images/mtg_logo_monocolor.svg";
 import { FaUserCircle, FaSignOutAlt, FaChartBar, FaLayerGroup, FaQuestionCircle, FaBars, FaRegClone } from "react-icons/fa";
-import profilePhoto from "../images/profile_photo.jpg";
+import profilePhoto from "../../public/images/profile_photo.jpg";
 
 export default function NavBarHome() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -46,12 +46,14 @@ export default function NavBarHome() {
         alt="MtG Deck Builder Logo"
         className="h-12 w-auto drop-shadow-[0_0px_4px_rgba(255,0,0,0.60)]"
       />
-      <span className="text-xl font-extrabold tracking-tight font-magic bg-gradient-to-r from-red-500 to-yellow-300 bg-clip-text text-transparent drop-shadow" style={{ letterSpacing: '0.04em', textShadow: '0 1px 4px #000' }}>Magic Deck Builder</span>
+      <span className="text-xl font-extrabold tracking-tight font-magic bg-gradient-to-r from-red-500 to-yellow-300 bg-clip-text text-transparent drop-shadow" style={{ letterSpacing: '0.04em', textShadow: '0 1px 4px #000' }}>My Deck Builder</span>
     </div>
   );
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 bg-black/80 border-b-2 border-gray-700 shadow-lg shadow-red-900/30 backdrop-blur-md">
+    <nav
+      className="navbar-cinzel fixed top-0 left-0 w-full z-50 bg-black/80 border-b-2 border-gray-700 shadow-lg shadow-red-900/30 backdrop-blur-md"
+    >
       <div className="w-full flex items-center h-14">
         {/* Left: Hamburger + Logo */}
         <div className="flex items-center gap-4 flex-1 min-w-0 justify-start pl-0 ml-0">

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import mtg_logo_monocolor from "../images/mtg_logo_monocolor.svg";
+import mtg_logo_monocolor from "../../public/images/mtg_logo_monocolor.svg";
 import SearchBarOnly from "./Search Bar/SearchBarOnly";
 import { FaUserCircle, FaSignOutAlt, FaLayerGroup, FaQuestionCircle, FaBars, FaRegClone } from "react-icons/fa";
-import profilePhoto from "../images/profile_photo.jpg";
+import profilePhoto from "../../public/images/profile_photo.jpg";
 
 export default function NavBarAndSearch() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

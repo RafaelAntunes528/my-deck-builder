@@ -2,7 +2,7 @@ import { useState } from 'react';
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import CardSearch from '../components/Search Bar/CardSearch.jsx';
-import profilePhoto from '../images/profile_photo.jpg';
+import profilePhoto from '../../public/images/profile_photo.jpg';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import NavBarAndSearch from "../components/NavBarAndSearch";
@@ -219,7 +219,7 @@ function Profile() {
         </div>
       </main>
       <footer className="mt-8 text-gray-500 text-sm text-center p-1">
-        © {new Date().getFullYear()} Magic Deck Builder created by Group 5 - Bytes4Future
+        © {new Date().getFullYear()} My Deck Builder. All rights reserved.
       </footer>
     </>
   );

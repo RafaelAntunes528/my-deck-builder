@@ -27,9 +27,9 @@ function CardSearch() {
         className="relative mb-4 flex flex-col gap-4 w-full items-stretch"
         role="search"
       >
-        <h1 className="text-3xl font-bold text-center text-white mb-2 bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
-          Find your card
-        </h1>
+          <h1 className="text-3xl sm:text-4xl font-bold text-center text-white mb-2 bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent fonte-morisroman">
+            Find your card
+          </h1>
 
         <div className="relative w-full group">
           <div className={`absolute inset-0 bg-gradient-to-r from-red-500/20 to-purple-500/20 rounded-2xl blur-xl transition-all duration-300 ${isFocused ? 'opacity-100 scale-105' : 'opacity-0 scale-100'}`}></div>

@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 // importar módulo MongoDB
 const { MongoClient } =  require('mongodb')
 
@@ -14,9 +16,11 @@ let client = undefined;
 async function getConnection() {
     if (!client) {
         try {
-            client = await MongoClient.connect(url)
+            client = await MongoClient.connect(url);
+            if (!client) throw new Error("MongoClient.connect returned undefined");
         } catch (err) {
-            console.log(err)
+            console.error("Erro no MongoDB:", err);
+            throw err; // Isso vai mostrar o erro real e impedir que client fique undefined
         }
     }
     return client;
@@ -32,6 +36,9 @@ async function closeConnection() {
 // Aceder à coleção 
 async function getCollection(collectionName) {
     const client = await getConnection();
+    if (!client) {
+        throw new Error("MongoDB client está undefined! Verifique a conexão e a variável DB_URL.");
+    }
     const db = client.db(defaultNameDb);
     return db.collection(collectionName)
 }

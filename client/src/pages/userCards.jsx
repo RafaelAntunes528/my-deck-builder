@@ -77,7 +77,12 @@ function UserCards() {
         <h1 className="text-2xl text-center font-bold text-white mb-6">All My Cards</h1>
 
         {loading ? (
-          <p className="text-white">Loading...</p>
+          <div className="flex items-center justify-center min-h-[40vh]">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto mb-4"></div>
+              <p className="text-white">Loading cards...</p>
+            </div>
+          </div>
         ) : cards.length === 0 ? (
           <p className="text-white">No cards found in your decks.</p>
         ) : (
