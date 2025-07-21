@@ -14,7 +14,7 @@ function Home() {
   const [toolsOpen, setToolsOpen] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:3030/api/cards/top3") // Endpoint para buscar as 3 cartas mais pesquisadas do dia
+    fetch("/api/cards/top3") // Endpoint para buscar as 3 cartas mais pesquisadas do dia
       .then((res) => res.json())
       .then((data) => setTopCards(data))
       .catch((err) => console.error(err));

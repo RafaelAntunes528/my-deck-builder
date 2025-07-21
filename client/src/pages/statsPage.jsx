@@ -35,7 +35,7 @@ function StatsPage() {
         if (!username) return;
         async function fetchUserStats() {
             try {
-                const response = await fetch(`http://localhost:3030/api/user-stats?user=${username}`);
+                const response = await fetch(`/api/user-stats?user=${username}`);
                 const data = await response.json();
                 console.log("Dados recebidos:", data);
                 // Corrige se algum campo vier como undefined

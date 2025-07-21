@@ -1,0 +1,15 @@
+{
+  "apps" : [{
+    "name" : "my-deck-builder-server",
+    "script" : "yarn",
+    "args": "start",
+    "interpreter" : "node@20.0.0"
+ }]
+}
+
+
+
+
+
+
+

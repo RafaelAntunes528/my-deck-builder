@@ -11,21 +11,27 @@ const { ObjectId } = require('mongodb');
 const { getStatsForUser } = require('./data/stats.js');
 
 const corsOptions = {
-  origin: '*',
-  credentials: true,            //access-control-allow-credentials:true
-  optionSuccessStatus: 200,
+  origin: '*', //access-control-allow-credentials:true
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
 }
 
 app.use(express.json({limit: '50mb'}));
-app.use(cors(corsOptions));
+app.use(cors());
+
+app.use("/api", (req, res, next) => {
+        console.log("PEDIDO!")
+        next()
+})
 
 const signupRouter = require('./auth/signup.js');
 app.use("/api/signup", signupRouter);
 
 dotenv.config();
-app.use('/', authRoutes);
+app.use('/api', authRoutes);
 
-
+app.get("/api/ping", (req, res) => {
+        return res.status(200).json({response: "PONG"})
+})
 
 // Criação de array de tokens
 const tokensArr = []
