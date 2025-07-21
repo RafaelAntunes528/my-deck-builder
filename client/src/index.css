@@ -13,7 +13,7 @@ body,
 }
 
 body {
-  background-image: url('../../public/images/fundo_proj_final.png');
+  background-image: url('/images/fundo_proj_final.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -225,7 +225,7 @@ code {
 
 @font-face {
   font-family: 'Viking';
-  src: url('../../public/fonts/VIKING-N.TTF') format('truetype');
+  src: url('/fonts/VIKING-N.TTF') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -236,7 +236,7 @@ code {
 
 @font-face {
   font-family: 'MorisRoman';
-  src: url('../../public/fonts/MorisRoman.ttf') format('truetype');
+  src: url('/fonts/MorisRoman.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
