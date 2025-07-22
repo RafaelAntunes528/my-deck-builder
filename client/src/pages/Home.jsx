@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import NavBarHome from "../components/NavBarHome";
 import { FaDiceD20 } from "react-icons/fa";
-import LogoWithGlow from "../components/LogoWithGlow";
+import LogoWithGlow from "../components/LogowithGlow";
 
 // Pagina inicial do site, onde o usuario pode pesquisar cartas, ver as 3 cartas mais pesquisadas do dia e acessar o login e cadastro
 // Importante: o servidor deve estar rodando na porta 3030 para que a API funcione corretamente
@@ -14,7 +14,7 @@ function Home() {
   const [toolsOpen, setToolsOpen] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:3030/api/cards/top3") // Endpoint para buscar as 3 cartas mais pesquisadas do dia
+    fetch("/api/cards/top3") // Endpoint para buscar as 3 cartas mais pesquisadas do dia
       .then((res) => res.json())
       .then((data) => setTopCards(data))
       .catch((err) => console.error(err));

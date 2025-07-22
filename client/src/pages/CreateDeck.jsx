@@ -283,7 +283,7 @@ function CreateDeck() {
       );
     }
     if (editId) {
-      fetch(`http://localhost:3030/api/decks/${editId}`)
+      fetch(`/api/decks/${editId}`)
         .then(res => res.json())
         .then(async data => {
           setDeckName(data.name || "");
@@ -392,8 +392,8 @@ function CreateDeck() {
     };
     try {
       const url = editId
-        ? `http://localhost:3030/api/decks/${editId}`
-        : "http://localhost:3030/api/decks";
+        ? `/api/decks/${editId}`
+        : "/api/decks";
       const method = editId ? "PUT" : "POST";
       const res = await fetch(url, {
         method,

@@ -69,7 +69,7 @@ async function getStatsForUser(user) {
 
 // Se precisares disto no frontend, podes usar algo assim:
 // export async function getUserStats(token) {
-//   const res = await fetch(`http://localhost:3030/api/user-stats?user=${username}`, {
+//   const res = await fetch(`/api/user-stats?user=${username}`, {
 //     headers: { 'Authorization': `Bearer ${token}` }
 //   });
 //   if (!res.ok) throw new Error('Erro ao buscar estatísticas');

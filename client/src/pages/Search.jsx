@@ -27,7 +27,7 @@ function SearchResult() {
     async function fetchCards() {
       setLoading(true);
       try {
-        const res = await axios.get(`http://localhost:3030/api/cards?name=${encodeURIComponent(name)}`);
+        const res = await axios.get(`/api/cards?name=${encodeURIComponent(name)}`);
         setCards(res.data);
         setError("");
       } catch (err) {

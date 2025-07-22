@@ -2,7 +2,7 @@ import Login from "../components/Login Form/Login";
 import NavBarHome from "../components/NavBarHome";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import LogoWithGlow from "../components/logowithGlow";
+import LogoWithGlow from "../components/LogowithGlow";
 
 // Pagina do login do site. 
 // Importante: o servidor deve estar rodando na porta 3030 para que a API funcione corretamente

@@ -24,7 +24,7 @@ function CardDetails() {
   // };
 
   useEffect(() => {
-    fetch(`http://localhost:3030/api/cards/${cardId}`)
+    fetch(`/api/cards/${cardId}`)
       .then((res) => res.json())
       .then((data) => setCard(data))
       .catch((err) => setError(err.message))

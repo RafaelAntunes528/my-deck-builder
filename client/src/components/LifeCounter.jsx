@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import LogoWithGlow from "./LogoWithGlow";
+import LogoWithGlow from "./LogowithGlow";
 
 const PLAYER_COLORS = [
   "#fefbd6", // white mana
