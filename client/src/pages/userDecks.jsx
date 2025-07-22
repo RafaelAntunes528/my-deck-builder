@@ -12,7 +12,7 @@ function UserDecks() {
     useEffect(() => {
         const fetchDecks = async () => {
             try {
-                const res = await axios.get(`/api/decks?user=${username}`);
+                const res = await axios.get(`http://localhost:3030/api/decks?user=${username}`);
                 setDecks(res.data);
             } catch (err) {
                 console.error("Erro ao carregar decks", err);

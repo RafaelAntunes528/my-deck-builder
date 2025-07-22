@@ -16,7 +16,7 @@ function UserCards() {
     async function fetchCards() {
       setLoading(true);
       try {
-        const res = await fetch(`/api/decks?user=${username}`);
+        const res = await fetch(`http://localhost:3030/api/decks?user=${username}`);
         const decks = await res.json();
 
         // Monta um array de cartas com referência ao deckId e ao índice da carta
@@ -43,7 +43,7 @@ function UserCards() {
   const handleRemoveCard = async (deckId, cardIndex) => {
     try {
       // Busque o deck do backend
-      const res = await fetch(`/api/decks/${deckId}`);
+      const res = await fetch(`http://localhost:3030/api/decks/${deckId}`);
       const deck = await res.json();
       if (!deck || !Array.isArray(deck.cards)) return;
 
@@ -52,7 +52,7 @@ function UserCards() {
       newCards.splice(cardIndex, 1);
 
       // Atualize o deck no backend
-      await fetch(`/api/decks/${deckId}`, {
+      await fetch(`http://localhost:3030/api/decks/${deckId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

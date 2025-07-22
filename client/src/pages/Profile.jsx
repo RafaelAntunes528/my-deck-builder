@@ -68,7 +68,7 @@ function Profile() {
     const fetchDecks = async () => {
       setLoadingDecks(true);
       try {
-        const res = await axios.get(`/api/decks?user=${username}`);
+        const res = await axios.get(`http://localhost:3030/api/decks?user=${username}`);
         setDecks(res.data);
       } catch (err) {
         setDecks([]);
@@ -91,7 +91,7 @@ function Profile() {
   const handleDeleteDeck = async (deckId) => {
     if (!window.confirm("Are you sure you want to delete this deck?")) return;
     try {
-      await axios.delete(`/api/decks/${deckId}`);
+      await axios.delete(`http://localhost:3030/api/decks/${deckId}`);
       setDecks((prev) => prev.filter((d) => d._id !== deckId));
     } catch (err) {
       alert("Erro ao excluir deck!");

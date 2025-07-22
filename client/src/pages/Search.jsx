@@ -27,7 +27,7 @@ function SearchResult() {
     async function fetchCards() {
       setLoading(true);
       try {
-        const res = await axios.get(`/api/cards?name=${encodeURIComponent(name)}`);
+        const res = await axios.get(`http://localhost:3030/api/cards?name=${encodeURIComponent(name)}`);
         setCards(res.data);
         setError("");
       } catch (err) {
@@ -75,12 +75,29 @@ function SearchResult() {
     
       <NavBarSearch />
       <div className="w-full max-w-6xl mx-auto p-6 pt-24">
-        <div className="mb-6 text-center">
-          <h1 className="text-2xl font-bold text-white mb-2">
-            Results for: <span className="text-red-400">{name}</span>
-          </h1>
-          <p className="text-gray-300">
-            {cards.length} Card{cards.length !== 1 ? "s" : ""} found{cards.length !== 1 ? "s" : ""}
+        <div className="mb-6 text-center flex flex-col items-center justify-center">
+          <div className="flex flex-wrap gap-2 justify-center mb-2">
+            {name && name.split(' ').map((q, i) => {
+              // Se for filtro (type:Land, rarity:rare, etc.), mostrar só o valor
+              const parts = q.split(':');
+              const isFilter = parts.length > 1;
+              const value = isFilter ? parts[1] : q;
+              return (
+                <span
+                  key={i}
+                  className={
+                    i === 0
+                      ? 'bg-red-600 text-white px-3 py-1 rounded-full font-semibold text-sm shadow border border-red-800'
+                      : 'bg-white text-black px-3 py-1 rounded-full font-semibold text-sm shadow border border-white/20'
+                  }
+                >
+                  {value}
+                </span>
+              );
+            })}
+          </div>
+          <p className="text-gray-300 text-base font-medium">
+            {cards.length} Card{cards.length !== 1 ? "s" : ""} found
           </p>
         </div>
 
@@ -131,11 +148,19 @@ function SearchResult() {
                     transition: { duration: 0.2 },
                   }}
                 >
-                  <img
-                    src={card.image_uris?.normal}
-                    alt={card.name}
-                    className="mx-auto rounded shadow-lg"
-                  />
+                  {card.card_faces ? (
+                    <img
+                      src={card.card_faces[0]?.image_uris?.normal}
+                      alt={card.card_faces[0]?.name || card.name}
+                      className="rounded-2xl shadow-2xl max-w-xs w-full h-auto"
+                    />
+                  ) : (
+                    <img
+                      src={card.image_uris?.normal}
+                      alt={card.name}
+                      className="rounded-2xl shadow-2xl max-w-sm w-full h-auto"
+                    />
+                  )}
 
                   {/* Overlay que acompanha a imagem */}
                   <div className="absolute inset-[-1px] bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-150 rounded-lg pointer-events-none">

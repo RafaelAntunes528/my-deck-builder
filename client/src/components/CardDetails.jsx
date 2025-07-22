@@ -24,7 +24,7 @@ function CardDetails() {
   // };
 
   useEffect(() => {
-    fetch(`/api/cards/${cardId}`)
+    fetch(`http://localhost:3030/api/cards/${cardId}`)
       .then((res) => res.json())
       .then((data) => setCard(data))
       .catch((err) => setError(err.message))
@@ -75,6 +75,31 @@ function CardDetails() {
     );
   }
 
+  // Função utilitária para obter a imagem correta da carta (normal ou dupla face)
+  const getCardImage = (card) => {
+    if (card.image_uris) {
+      return card.image_uris.normal || card.image_uris.large || card.image_uris.small || card.image_uris.art_crop;
+    }
+    if (card.card_faces && card.card_faces[0]?.image_uris) {
+      return (
+        card.card_faces[0].image_uris.normal ||
+        card.card_faces[0].image_uris.large ||
+        card.card_faces[0].image_uris.small ||
+        card.card_faces[0].image_uris.art_crop
+      );
+    }
+    // Tenta pegar da segunda face, se a primeira não tiver
+    if (card.card_faces && card.card_faces[1]?.image_uris) {
+      return (
+        card.card_faces[1].image_uris.normal ||
+        card.card_faces[1].image_uris.large ||
+        card.card_faces[1].image_uris.small ||
+        card.card_faces[1].image_uris.art_crop
+      );
+    }
+    return null;
+  };
+  console.log("URL da imagem:", getCardImage(card));
   return (
     <>
       
@@ -96,24 +121,24 @@ function CardDetails() {
             >
               <div className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-purple-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <motion.img
-                  src={card.image_uris?.normal || card.image_uris?.large}
-                  alt={card.name}
-                  className="relative rounded-2xl shadow-2xl max-w-sm w-full h-auto"
-                  whileHover={{
-                    scale: 1.02,
-                    transition: { duration: 0.2 }
-
-                  }}
-                  initial={{ y: 0 }}
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{
-                    duration: 3 + Math.random(), // entre 3 e 4 segundos
-                    repeat: Infinity,
-                    repeatType: "loop",
-                    ease: "easeInOut",
-                  }}
-                />
+                {card.card_faces ? (
+                  <div className="flex flex-col gap-4 items-center justify-center">
+                    {card.card_faces.map((face, idx) => (
+                      <img
+                        key={idx}
+                        src={face.image_uris?.normal}
+                        alt={face.name}
+                        className="rounded-2xl shadow-2xl max-w-xs w-full h-auto"
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <img
+                    src={card.image_uris?.normal}
+                    alt={card.name}
+                    className="rounded-2xl shadow-2xl max-w-sm w-full h-auto"
+                  />
+                )}
               </div>
             </motion.div>
 
