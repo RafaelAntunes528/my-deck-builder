@@ -155,7 +155,7 @@ function Tutorials() {
       <NavBarAndSearch />
       <div
         id="tutorials-root"
-        className="p-8 text-center mt-12 min-h-screen text-white flex flex-col items-center justify-center max-w-2xl mx-auto pt-24"
+        className="p-8 text-center mt-2 min-h-screen text-white flex flex-col items-center justify-center max-w-2xl mx-auto pt-2"
       >
         <p className="text-gray-300 mb-4 text-3xl font-bold">
           Learn how to play the game

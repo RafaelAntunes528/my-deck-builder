@@ -44,39 +44,39 @@ function SearchResult() {
 
   if (loading) {
     return (
-      <>
+      <div className="flex flex-col min-h-screen">
         <NavBarSearch />
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto mb-4"></div>
             <p className="text-white">Searching for Cards...</p>
           </div>
         </div>
-      </>
+        <Footer leve />
+      </div>
     );
   }
 
   if (error) {
     return (
-      <>
+      <div className="flex flex-col min-h-screen">
         <NavBarSearch />
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 max-w-md">
               <p className="text-red-400 font-medium">{error}</p>
             </div>
           </div>
         </div>
-      </>
+        <Footer leve />
+      </div>
     );
   }
 
   return (
-    <>
-    
-    
+    <div className="flex flex-col min-h-screen">
       <NavBarSearch />
-      <div className="w-full max-w-6xl mx-auto p-6 pt-24">
+      <main className="flex-1 w-full max-w-6xl mx-auto p-6 pt-24">
         <div className="mb-6 text-center flex flex-col items-center justify-center">
           <div className="flex flex-wrap gap-2 justify-center mb-2">
             {name && name.split(' ').map((q, i) => {
@@ -177,9 +177,9 @@ function SearchResult() {
             </motion.div>
           ))}
         </div>
-      </div>
+      </main>
       <Footer leve />
-    </>
+    </div>
   );
 }
 

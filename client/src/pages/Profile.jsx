@@ -123,7 +123,7 @@ function Profile() {
   return (
     <>
       <NavBarAndSearch />
-      <main className="w-full min-h-screen pt-24 pb-8 bg-transparent">
+      <main className="w-full min-h-screen pt-12 pb-8 bg-transparent">
         {/* Imagem de perfil centralizada */}
         <div className="flex flex-col items-center mt-4 mb-2">
           <div className="relative">
