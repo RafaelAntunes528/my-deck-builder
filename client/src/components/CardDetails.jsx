@@ -25,7 +25,19 @@ function CardDetails() {
 
   useEffect(() => {
     fetch(`/api/cards/${cardId}`)
-      .then((res) => res.json())
+      .then(async (res) => {
+        let data;
+        try {
+          data = await res.json();
+        } catch (e) {
+          throw new Error("No card found or API error.");
+        }
+        // Se vier erro do backend, lançar erro para o catch
+        if (data && data.error) {
+          throw new Error(data.error);
+        }
+        return data;
+      })
       .then((data) => setCard(data))
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
@@ -68,6 +80,7 @@ function CardDetails() {
           <div className="text-center">
             <div className="bg-white/5 rounded-lg p-6">
               <p className="text-white">Card not found</p>
+              <p className="text-gray-400 text-xs mt-2">ID: {cardId}</p>
             </div>
           </div>
         </div>
@@ -99,6 +112,7 @@ function CardDetails() {
     }
     return null;
   };
+  console.log("Card ID:", cardId, "Objeto recebido:", card);
   console.log("URL da imagem:", getCardImage(card));
   return (
     <>
@@ -121,12 +135,12 @@ function CardDetails() {
             >
               <div className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-purple-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                {card.card_faces ? (
+                {card.card_faces && Array.isArray(card.card_faces) && card.card_faces.length > 0 ? (
                   <div className="flex flex-col gap-4 items-center justify-center">
                     {card.card_faces.map((face, idx) => (
                       <img
-                        key={idx}
-                        src={face.image_uris?.normal}
+                        key={face.oracle_id || face.name || idx}
+                        src={face.image_uris?.normal || face.image_uris?.large || face.image_uris?.art_crop || face.image_uris?.small || "/default-card.png"}
                         alt={face.name}
                         className="rounded-2xl shadow-2xl max-w-xs w-full h-auto"
                       />
@@ -134,7 +148,7 @@ function CardDetails() {
                   </div>
                 ) : (
                   <img
-                    src={card.image_uris?.normal}
+                    src={getCardImage(card) || "/default-card.png"}
                     alt={card.name}
                     className="rounded-2xl shadow-2xl max-w-sm w-full h-auto"
                   />

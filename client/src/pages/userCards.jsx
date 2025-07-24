@@ -3,6 +3,8 @@ import NavBarAndSearch from "../components/NavBarAndSearch";
 import { motion } from "framer-motion";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
+import API_BASE from '../api';
+import Footer from "../components/Footer";
 
 function UserCards() {
   const { username } = useParams();
@@ -16,7 +18,7 @@ function UserCards() {
     async function fetchCards() {
       setLoading(true);
       try {
-        const res = await fetch(`/api/decks?user=${username}`);
+        const res = await fetch(`${API_BASE}/api/decks?user=${username}`);
         const decks = await res.json();
 
         // Monta um array de cartas com referência ao deckId e ao índice da carta
@@ -43,7 +45,7 @@ function UserCards() {
   const handleRemoveCard = async (deckId, cardIndex) => {
     try {
       // Busque o deck do backend
-      const res = await fetch(`/api/decks/${deckId}`);
+      const res = await fetch(`${API_BASE}/api/decks/${deckId}`);
       const deck = await res.json();
       if (!deck || !Array.isArray(deck.cards)) return;
 
@@ -52,7 +54,7 @@ function UserCards() {
       newCards.splice(cardIndex, 1);
 
       // Atualize o deck no backend
-      await fetch(`/api/decks/${deckId}`, {
+      await fetch(`${API_BASE}/api/decks/${deckId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -151,6 +153,7 @@ function UserCards() {
           </div>
         )}
       </div >
+      <Footer leve />
     </>
   );
 }

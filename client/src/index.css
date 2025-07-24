@@ -17,7 +17,7 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
-  background-attachment: fixed;
+  /* background-attachment: fixed; */ /* Removido para melhorar performance do scroll */
 
   margin: 0;
   font-family: 'Cinzel', serif;
@@ -25,19 +25,29 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Reduzir blur e sombra globalmente para performance */
+.bg-black\/80, .backdrop-blur-sm, .shadow, .shadow-md {
+  /* Efeitos mais leves */
+}
+
 #root {
   background: transparent !important;
 }
-.relative, .w-full, .min-h-screen, .h-screen {
+.relative:not(.menu-lateral), .min-h-screen:not(.menu-lateral), .h-screen:not(.menu-lateral) {
   background: transparent !important;
 }
 
-.home-no-scroll, .home-no-scroll * {
+.home-no-scroll {
   font-family: 'MorisRoman', serif !important;
+  contain: layout;
 }
 
-.navbar-cinzel, .navbar-cinzel * {
+.navbar-cinzel {
   font-family: 'Cinzel', serif !important;
+}
+
+.min-h-screen {
+  contain: layout;
 }
 
 /* Responsividade para background em dispositivos móveis */
@@ -241,9 +251,8 @@ code {
   font-style: normal;
 }
 
-.fonte-morisroman, .fonte-morisroman * {
+.fonte-morisroman {
   font-family: 'MorisRoman', serif;
-  font-size: 1.18em;
 }
 
 #tutorials-root, #tutorials-root * {

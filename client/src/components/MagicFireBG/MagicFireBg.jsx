@@ -2,8 +2,8 @@ import React from 'react';
 import '../../index.css';
 
 const FireSparks = () => {
-  const totalSparks = 35;
-  const specialSparks = 5;
+  const totalSparks = 10; // Reduzido para performance
+  const specialSparks = 2; // Reduzido para performance
 
   const colorOptions = [
     { class: 'bg-white', shadow: 'rgba(255, 255, 255, 0.6)' },

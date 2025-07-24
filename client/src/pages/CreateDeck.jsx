@@ -1,25 +1,58 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import NavBarAndSearch from "../components/NavBarAndSearch";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaFolderOpen } from "react-icons/fa";
+import API_BASE from '../api';
+import Footer from "../components/Footer";
+import { MdOutlineMenuBook } from "react-icons/md";
+import FloatingButtonDeck from "../components/FloatingButtonDeck";
 
 
 // Componente para exibir cada resultado de carta
 function CardResult({ card, onAdd, onRemove }) {
+  const isDoubleFaced = Array.isArray(card.card_faces) && card.card_faces.length > 1;
+  // Função utilitária para pegar a melhor imagem possível de uma face
+  const getFaceImage = (face) =>
+    face?.image_uris?.normal ||
+    face?.image_uris?.large ||
+    face?.image_uris?.art_crop ||
+    face?.image_uris?.small ||
+    "/default-card.png";
   return (
     <div
-      className="relative bg-white/10 p-4 rounded-xl shadow-md transition-transform hover:scale-105 hover:bg-white/20 group cursor-pointer border border-white/10"
+      className={`relative bg-white/10 p-4 rounded-xl shadow-md transition-transform hover:scale-105 hover:bg-white/20 group cursor-pointer border border-white/10 ${isDoubleFaced ? 'perspective' : ''}`}
+      style={isDoubleFaced ? { perspective: '800px' } : {}}
     >
       <h2 className="text-sm font-bold mb-2 text-center text-white">
         {card.name}
       </h2>
-
-      <img
-        src={card.card_faces ? (card.card_faces[0]?.image_uris?.normal || card.card_faces[0]?.image_uris?.large) : (card.image_uris?.normal || card.image_uris?.large || "/default-card.png")}
-        alt={card.name}
-        className="mx-auto rounded shadow-lg"
-      />
+      {isDoubleFaced ? (
+        <div className="relative w-full h-56 mx-auto group" style={{ perspective: '800px' }}>
+          <div className="absolute w-full h-full transition-transform duration-500 transform group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d' }}>
+            {/* Frente */}
+            <img
+              src={getFaceImage(card.card_faces[0])}
+              alt={card.card_faces[0]?.name || card.name}
+              className="mx-auto rounded shadow-lg w-full h-56 object-cover absolute backface-hidden"
+              style={{ backfaceVisibility: 'hidden' }}
+            />
+            {/* Verso */}
+            <img
+              src={getFaceImage(card.card_faces[1])}
+              alt={card.card_faces[1]?.name || card.name}
+              className="mx-auto rounded shadow-lg w-full h-56 object-cover absolute rotate-y-180 backface-hidden"
+              style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+            />
+          </div>
+        </div>
+      ) : (
+        <img
+          src={card.card_faces ? getFaceImage(card.card_faces[0]) : (card.image_uris?.normal || card.image_uris?.large || card.image_uris?.art_crop || card.image_uris?.small || "/default-card.png")}
+          alt={card.name}
+          className="mx-auto rounded shadow-lg"
+        />
+      )}
       <div className="mt-2 flex justify-center gap-2">
         <button
           onClick={() => onAdd(card)}
@@ -262,6 +295,7 @@ function CreateDeck() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [format, setFormat] = useState("Standard"); // Novo estado para formato
   const [toast, setToast] = useState(null);
+  const debounceTimeout = useRef();
  
 
   useEffect(() => {
@@ -283,7 +317,7 @@ function CreateDeck() {
       );
     }
     if (editId) {
-      fetch(`/api/decks/${editId}`)
+      fetch(`${API_BASE}/api/decks/${editId}`)
         .then(res => res.json())
         .then(async data => {
           setDeckName(data.name || "");
@@ -318,13 +352,34 @@ function CreateDeck() {
     const res = await fetch(
       `https://api.scryfall.com/cards/search?q=${encodeURIComponent(query)}`
     );
-    const data = await res.json();
+    let data;
+    try {
+      data = await res.json();
+    } catch (e) {
+      setToast({ type: "error", msg: "No card found or API error." });
+      setSearchResults([]);
+      return;
+    }
     if (data?.data) {
       setSearchResults(data.data);
     } else {
+      setToast({ type: "error", msg: data?.details || "No card found." });
       setSearchResults([]);
     }
   };
+
+  // Busca automática ao digitar (debounce)
+  useEffect(() => {
+    if (!query) {
+      setSearchResults([]);
+      return;
+    }
+    if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+    debounceTimeout.current = setTimeout(() => {
+      searchCards();
+    }, 500); // 500ms de delay
+    return () => clearTimeout(debounceTimeout.current);
+  }, [query]);
 
   // Função utilitária para saber se é terreno básico
   const isBasicLand = (card) => {
@@ -392,8 +447,8 @@ function CreateDeck() {
     };
     try {
       const url = editId
-        ? `/api/decks/${editId}`
-        : "/api/decks";
+        ? `${API_BASE}/api/decks/${editId}`
+        : `${API_BASE}/api/decks`;
       const method = editId ? "PUT" : "POST";
       const res = await fetch(url, {
         method,
@@ -448,25 +503,51 @@ function CreateDeck() {
       )}
     </AnimatePresence>
 
-    {/* Floating button for mobile */}
-    <button
-      onClick={() => setIsSidebarOpen(true)}
-      className="fixed bottom-6 right-6 z-50 bg-red-800 text-white p-4 rounded-full shadow-lg lg:hidden"
-      title="Open Deck"
-    >
-      <FaFolderOpen /> Open Deck
-    </button>
+    {!isSidebarOpen && <FloatingButtonDeck onClick={() => setIsSidebarOpen(true)} />}
+
+    {/* Sidebar/modal for mobile */}
+    <AnimatePresence>
+      {isSidebarOpen && (
+        <motion.div
+          initial={{ x: '100%' }}
+          animate={{ x: 0 }}
+          exit={{ x: '100%' }}
+          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+          className="fixed inset-0 z-[60] flex lg:hidden pointer-events-none"
+        >
+          {/* Overlay */}
+          <div
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm z-[60] pointer-events-auto"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+          {/* Sidebar */}
+          <div className="relative ml-auto h-auto max-h-screen w-80 max-w-full bg-black/90 border-l-2 border-red-800 shadow-2xl rounded-l-3xl flex flex-col overflow-y-auto z-[70] pointer-events-auto">
+            <DeckSidebar
+              deckCards={deckCards}
+              onRemove={handleRemoveCard}
+              onSave={handleSaveDeck}
+              onClear={handleClearDeck}
+              deckName={deckName}
+              setDeckName={setDeckName}
+              isMobile={true}
+              format={format}
+              onClose={() => setIsSidebarOpen(false)}
+            />
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
 
     {/* Main layout */}
-    <div className="relative z-10 pt-24 grid grid-cols-1 lg:grid-cols-2 min-h-screen text-white mx-3 gap-8">
+    <div className="relative z-10 mb-24 mt-12 grid grid-cols-1 lg:grid-cols-2 min-h-screen text-white mx-3 gap-8">
       {/* Deck builder area */}
-      <div className="p-8 bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl w-full border border-white/10 flex flex-col">
+      <div className="p-8 bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl w-full max-w-4xl mx-auto border border-white/10 flex flex-col">
         <h1 className="text-3xl lg:text-5xl font-extrabold mb-8 text-center bg-clip-text drop-shadow-lg tracking-tight">
           Deck Builder<br /><span className="text-white/80 font-bold">{username}</span>
         </h1>
 
         {/* Seletor de formato sempre visível no desktop */}
-        <div className="mb-4 flex flex-col sm:flex-row gap-4 items-center justify-center sticky top-0 z-30 bg-white/5 py-2 rounded-xl">
+        <div className="mb-4 flex flex-col sm:flex-row gap-4 items-center justify-center sticky top-0 z-30 bg-white/5 py-2 rounded-xl w-full max-w-md mx-auto">
           <label className="text-white font-semibold">Format:</label>
           <select
             value={format}
@@ -491,12 +572,7 @@ function CreateDeck() {
               className="text-black px-4 py-2 rounded flex-1 border border-white/10 focus:outline-none focus:ring-2 focus:ring-blue-900"
               placeholder="Type card name..."
             />
-            <button
-              onClick={searchCards}
-              className="bg-green-600 px-4 py-2 rounded hover:bg-green-700 transition border border-white/10 font-semibold"
-            >
-              Search
-            </button>
+            {/* Botão de busca removido pois a busca agora é automática */}
           </div>
         </div>
 
@@ -538,25 +614,9 @@ function CreateDeck() {
         format={format}
       />
     </div>
-
-    {/* Sidebar for mobile */}
-    {isSidebarOpen && (
-      <div className="fixed inset-0 bg-black/50 z-50 flex justify-end lg:hidden">
-        <DeckSidebar
-          deckCards={deckCards}
-          onRemove={handleRemoveCard}
-          onSave={handleSaveDeck}
-          onClear={handleClearDeck}
-          deckName={deckName}
-          setDeckName={setDeckName}
-          isMobile={true}
-          onClose={() => setIsSidebarOpen(false)}
-          format={format}
-        />
-      </div>
-    )}
-  </>
-);
+    <Footer leve />
+    </>
+  );
 }
 
 export default CreateDeck;

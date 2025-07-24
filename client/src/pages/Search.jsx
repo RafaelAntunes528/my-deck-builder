@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 import NavBarSearch from "../components/NavBarAndSearch";
+import API_BASE from '../api';
+import Footer from "../components/Footer";
 
 function SearchResult() {
   const { name } = useParams();
@@ -27,7 +29,7 @@ function SearchResult() {
     async function fetchCards() {
       setLoading(true);
       try {
-        const res = await axios.get(`/api/cards?name=${encodeURIComponent(name)}`);
+        const res = await axios.get(`${API_BASE}/api/cards?name=${encodeURIComponent(name)}`);
         setCards(res.data);
         setError("");
       } catch (err) {
@@ -176,10 +178,7 @@ function SearchResult() {
           ))}
         </div>
       </div>
-
-      <footer className="mt-6 text-gray-500 text-sm text-center">
-        © {new Date().getFullYear()} My Deck Builder. All rights reserved.
-      </footer>
+      <Footer leve />
     </>
   );
 }

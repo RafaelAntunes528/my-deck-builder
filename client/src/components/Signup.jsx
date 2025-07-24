@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE from '../api';
 
 // Componente de Signup que permite aos usuários se registrarem com um nome de usuário, email e senha
 // O componente faz uma requisição POST para a API para criar um novo usuário
@@ -29,7 +30,7 @@ function Signup() {
     }
 
     try {
-      const response = await fetch("/api/signup", {
+      const response = await fetch(`${API_BASE}/api/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -64,19 +65,12 @@ function Signup() {
     <div className="min-h-fit flex justify-center px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div className="my-4 bg-white/10 backdrop-blur-sm rounded-lg p-6 sm:p-8 shadow-xl">
-          <h2 className="text-2xl sm:text-3xl font-bold text-center text-white mb-6">
-            Sign Up
-          </h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-center text-white mb-6">Sign Up</h2>
           <form onSubmit={handleSignup} className="space-y-4">
             <div className="text-center text-gray-300 mb-4">
               <p className="text-sm">
                 Already have an account?{" "}
-                <a
-                  href="/login"
-                  className="text-red-400 hover:underline"
-                >
-                  Login
-                </a>
+                <a href="/login" className="text-red-400 hover:underline">Login</a>
               </p>
             </div>
             <div className="text-left text-white font-semibold">
@@ -138,12 +132,14 @@ function Signup() {
               />
             </div>
             <br />
-            <button
-              type="submit"
-              className="w-full py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 shadow-md transition-all duration-200 font-medium"
-            >
-              Sign Up
-            </button>
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                className="fonte-morisroman w-40 py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 shadow-md transition-all duration-200 font-medium"
+              >
+                Sign Up
+              </button>
+            </div>
           </form>
         </div>
       </div>

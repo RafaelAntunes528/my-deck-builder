@@ -8,7 +8,9 @@ import { useNavigate } from 'react-router-dom';
 import NavBarAndSearch from "../components/NavBarAndSearch";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
+import API_BASE from '../api';
+import Footer from '../components/Footer.jsx';
 
 
 // Componente de perfil do usuário, que exibe informações do usuário e permite navegar para outras páginas
@@ -27,6 +29,8 @@ function Profile() {
   const [profileImg, setProfileImg] = useState(() => {
     return localStorage.getItem('profilePhoto') || profilePhoto;
   });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deckToDelete, setDeckToDelete] = useState(null);
 
   const handleCreateDeck = () => {
     navigate(`/create-deck?user=${username}`); // Navega para a página de criação de deck com o username como parâmetro
@@ -68,7 +72,7 @@ function Profile() {
     const fetchDecks = async () => {
       setLoadingDecks(true);
       try {
-        const res = await axios.get(`/api/decks?user=${username}`);
+        const res = await axios.get(`${API_BASE}/api/decks?user=${username}`);
         setDecks(res.data);
       } catch (err) {
         setDecks([]);
@@ -89,13 +93,26 @@ function Profile() {
 
   // Excluir deck
   const handleDeleteDeck = async (deckId) => {
-    if (!window.confirm("Are you sure you want to delete this deck?")) return;
+    setDeckToDelete(deckId);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteDeck = async () => {
+    if (!deckToDelete) return;
     try {
-      await axios.delete(`/api/decks/${deckId}`);
-      setDecks((prev) => prev.filter((d) => d._id !== deckId));
+      await axios.delete(`${API_BASE}/api/decks/${deckToDelete}`);
+      setDecks((prev) => prev.filter((d) => d._id !== deckToDelete));
     } catch (err) {
-      alert("Erro ao excluir deck!");
+      // Optionally show a toast or error message
+    } finally {
+      setShowDeleteModal(false);
+      setDeckToDelete(null);
     }
+  };
+
+  const cancelDeleteDeck = () => {
+    setShowDeleteModal(false);
+    setDeckToDelete(null);
   };
 
   // Editar deck (mock)
@@ -105,9 +122,7 @@ function Profile() {
 
   return (
     <>
-      <header>
-        <NavBarAndSearch />
-      </header>
+      <NavBarAndSearch />
       <main className="w-full min-h-screen pt-24 pb-8 bg-transparent">
         {/* Imagem de perfil centralizada */}
         <div className="flex flex-col items-center mt-4 mb-2">
@@ -135,7 +150,7 @@ function Profile() {
             />
           </div>
           <h2
-            className="mt-8 text-3xl font-extrabold tracking-tight font-magic text-center select-text bg-clip-text text-transparent animate-gradient-bg bg-gradient-to-r from-red-500 via-yellow-400 to-orange-500"
+            className="mt-8 text-4xl font-extrabold text-white text-center fonte-morisroman"
           >{username}
           </h2>
         </div>
@@ -165,7 +180,7 @@ function Profile() {
 
 
         {/* Decks do usuário */}
-        <div id="my-decks" className="w-full max-w-4xl mx-auto mt-2">
+        <div id="my-decks" className="w-full max-w-4xl mx-auto mt-2 pb-24 md:pb-0">
           <h3 className="text-xl font-bold text-white m-4 flex justify-center">My Decks</h3>
           {loadingDecks ? (
             <p className="text-white/70">Loading decks...</p>
@@ -205,11 +220,11 @@ function Profile() {
                   <div className="flex gap-2 mt-2">
                     <button
                       onClick={() => handleEditDeck(deck._id)}
-                      className="flex-1 py-1 px-3 rounded bg-blue-950 hover:bg-blue-900 text-white text-sm font-semibold transition"
+                      className="flex-1 py-1 px-3 rounded bg-blue-700 hover:bg-blue-900 text-white text-sm font-semibold transition"
                     >Edit</button>
                     <button
                       onClick={() => handleDeleteDeck(deck._id)}
-                      className="flex-1 py-1 px-3 rounded bg-red-900 hover:bg-red-700 text-white text-sm font-semibold transition"
+                      className="flex-1 py-1 px-3 rounded bg-red-700 hover:bg-red-700 text-white text-sm font-semibold transition"
                     >Delete</button>
                   </div>
                 </div>
@@ -217,10 +232,27 @@ function Profile() {
             </div>
           )}
         </div>
+        {/* Delete Deck Popup */}
+        {showDeleteModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+            <div className="bg-black/80 rounded-xl shadow-lg p-6 max-w-sm w-full border border-red-200">
+              <h2 className="text-lg font-bold text-red-600 mb-3 text-center">Delete Deck</h2>
+              <p className="text-white mb-6 text-center">Are you sure you want to delete this deck? This action cannot be undone.</p>
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={cancelDeleteDeck}
+                  className="px-4 py-2 rounded bg-gray-200 text-gray-800 font-semibold hover:bg-gray-300 transition"
+                >Cancel</button>
+                <button
+                  onClick={confirmDeleteDeck}
+                  className="px-4 py-2 rounded bg-red-600 text-white font-semibold hover:bg-red-700 transition"
+                >Delete</button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
-      <footer className="mt-8 text-gray-500 text-sm text-center p-1">
-        © {new Date().getFullYear()} My Deck Builder. All rights reserved.
-      </footer>
+      <Footer leve />
     </>
   );
 }

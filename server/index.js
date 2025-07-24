@@ -167,7 +167,13 @@ app.get('/api/cards/:id', async (req, res) => {
     const response = await axios.get(`https://api.scryfall.com/cards/${id}`);
     res.json(response.data);
   } catch (error) {
-    res.status(500).json({ error: 'Carta não encontrada' });
+    let msg = 'Card not found or API error.';
+    if (error.response && error.response.status === 404) {
+      msg = 'Card not found.';
+      res.status(404).json({ error: msg });
+    } else {
+      res.status(500).json({ error: msg });
+    }
   }
 });
 

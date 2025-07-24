@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE from '../../api';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -10,7 +11,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const res = await fetch('/api/login', {
+      const res = await fetch(`${API_BASE}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -74,17 +75,26 @@ function Login() {
                 Forgot your password?
               </a>
             </div>
-            <button
-              type="submit"
-              className="w-full py-2 px-4 bg-red-600 text-white rounded-md hover:bg-red-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 shadow-md transition-all duration-200 font-medium"
-            >
-              Login
-            </button>
+            <div className="flex justify-center gap-4">
+              <button
+                type="submit"
+                className="bg-red-700 text-white font-semibold px-10 py-2 text-base rounded-lg hover:bg-black hover:text-white hover:scale-105 focus:bg-black focus:text-white focus:scale-105 transition duration-200 shadow border border-red-800 fonte-morisroman"
+              >
+                Login
+              </button>
+            </div>
+            <div className="flex justify-center mt-3">
+              <span className="text-sm text-gray-300">Don't have an account?{' '}
+                <button
+                  type="button"
+                  onClick={() => navigate('/signup')}
+                  className="text-red-400 hover:text-red-600 underline font-semibold transition-colors duration-150"
+                >
+                  Sign up
+                </button>
+              </span>
+            </div>
           </form>
-          <div className="text-center mt-4">
-            <span className="text-gray-200">Don't have an account?</span>
-            <a href="/signup" className="text-red-400 hover:underline ml-2">Sign up</a>
-          </div>
         </div>
       </div>
     </div>

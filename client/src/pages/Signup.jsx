@@ -1,13 +1,14 @@
 import Signup from "../components/Signup";
-import NavBarHome from "../components/NavBarHome";
 import LogoWithGlow from "../components/LogowithGlow";
+import Footer from "../components/Footer";
+import NavBarAndSearch from "../components/NavBarAndSearch";
 
 function SignUpPage() {
   return (
     <>
-      <header><NavBarHome /></header>
+      <NavBarAndSearch />
 
-      <div className=" text-center">
+      <div className="text-center pt-6 overflow-visible">
                   {/* LOGOTIPO*/}
                   <LogoWithGlow />
                   </div>
@@ -16,9 +17,7 @@ function SignUpPage() {
         <Signup /> <br />
 
       </div>
-      <footer className=" text-gray-500 text-sm text-center pb-6">
-        © {new Date().getFullYear()} My Deck Builder. All rights reserved.
-      </footer>
+      <Footer leve />
     </>
   );
 }

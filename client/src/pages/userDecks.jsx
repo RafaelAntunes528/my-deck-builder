@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import NavBarAndSearch from "../components/NavBarAndSearch";
 import ListButton from '../components/list_btn.jsx';
 import axios from "axios";
+import API_BASE from '../api';
+import Footer from "../components/Footer";
 
 function UserDecks() {
     // Usar o username do localStorage, que é o mesmo usado na criação do deck
@@ -12,7 +14,7 @@ function UserDecks() {
     useEffect(() => {
         const fetchDecks = async () => {
             try {
-                const res = await axios.get(`/api/decks?user=${username}`);
+                const res = await axios.get(`${API_BASE}/api/decks?user=${username}`);
                 setDecks(res.data);
             } catch (err) {
                 console.error("Erro ao carregar decks", err);
@@ -25,11 +27,8 @@ function UserDecks() {
 
     return (
         <>
-            <header>
-                <NavBarAndSearch />
-            </header>
-
-            <div className="p-8 text-center min-h-screen text-white">
+            <NavBarAndSearch />
+            <div className="p-8 text-center min-h-screen text-white pt-24">
                 <h1 className="font-bold text-3xl mb-6 text-white">Your owned Decks</h1>
                 {loading ? (
                   <p className="text-white/70">Loading...</p>
@@ -48,10 +47,7 @@ function UserDecks() {
                   </div>
                 )}
             </div>
-
-            <footer className="mt-16 text-gray-500 text-sm text-center">
-                © {new Date().getFullYear()} My Deck Builder. All rights reserved.
-            </footer>
+            <Footer leve />
         </>
     );
 }
